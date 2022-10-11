@@ -53,7 +53,7 @@ form.verify({
 //     })
 //   })
 
-
+axios.defaults.baseURL = 'http://www.liulongbin.top:3007';
 
 document.querySelector('#form_reg').addEventListener('submit',function(e)
 {
@@ -64,7 +64,7 @@ let data={
   password:document.querySelector('#pwd').value
 }
 
-axios.defaults.baseURL = 'http://www.liulongbin.top:3007';
+
 
  axios({//转换数据的方法
 
@@ -86,7 +86,7 @@ headers: {
 
 ,
 
- url:'http://www.liulongbin.top:3007/api/reguser',
+ url:'/api/reguser',
 method:'post',
     data,
 
@@ -111,50 +111,50 @@ layer.msg(res.data.message);
 })
 
 
+  document.querySelector('.layui-form').addEventListener('submit',function(e){
+    e.preventDefault()
+    let data={
+    username:document.querySelector('#form_login [name=username]').value,
+    password:document.querySelector('#form_login [name=password]').value
+    
+    }
+    
+    
+     axios({
+     
+     transformRequest: [
+     function(data) {
+     let ret = '';
+     for (let it in data) {
+     ret += encodeURIComponent(it) + '=' + encodeURIComponent(data[it]) + '&';
+         }
+        return ret;
+      }
+      ],
+     headers: {
+      'Content-Type': 'application/x-www-form-urlencoded'
+    },
+     url:'/api/login',
+    method:'post',
+        data,
+    
+       }).then(res=>{
+     console.log(res)
+    if(!res.data.status==0){
+    layer.msg(res.data.message)
+    }else{
+      layer.msg(res.data.message)
+      //如果登录成功就存到本地一个token
+      localStorage.setItem('token',res.data.token)
+      location.href='./index.html'
+    }
+    
+    
+        });
+    
+    
+    
+    })
+
+
 //登录的请求
-document.querySelector('#form_login').addEventListener('submit',function(e){
-e.preventDefault()
-let data={
-username:document.querySelector('#form_login [name=username]').value,
-password:document.querySelector('#form_login [name=password]').value
-
-}
-
-console.log(data)
- axios({
- 
- transformRequest: [
- function(data) {
- let ret = '';
- for (let it in data) {
- ret += encodeURIComponent(it) + '=' + encodeURIComponent(data[it]) + '&';
-     }
-    return ret;
-  }
-  ],
- headers: {
-  'Content-Type': 'application/x-www-form-urlencoded'
-},
- url:'/api/login',
-method:'post',
-    data,
-
-   }).then(res=>{
- console.log(res)
-if(!res.data.status==0){
-layer.msg(res.data.message)
-}else{
-  layer.msg(res.data.message)
-  //如果登录成功就存到本地一个token
-  localStorage.setItem('token',res.data.token)
-  location.href='./index.html'
-}
-
-
-
-
-    });
-
-
-
-})
